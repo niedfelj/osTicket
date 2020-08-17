@@ -422,7 +422,7 @@ class osTicket {
             switch ($info['v']) {
             case '1':
                 if ($major && $info['m'] && $info['m'] != $major)
-                    continue;
+                    continue 2; // tg edit - php upgrade added 2
                 if ($product == 'core' && GIT_VERSION == '$git')
                     return $info['c'];
                 return $info['V'];

@@ -251,9 +251,19 @@ class Mailer {
         $to = preg_replace("/(\r\n|\r|\n)/s",'', trim($to));
         $subject = preg_replace("/(\r\n|\r|\n)/s",'', trim($subject));
 
+    //TG edit - find out if a CC was added in class.email.php by looking for the string in the bottom of the email body from class.email.php
+        $cc = explode("##CC:",$message);
+        for($i=1;$i<=count($cc)-1;$i+=2){
+            $cc_address = $cc[$i]; 
+            $cc_address = str_replace (';',',',$cc_address); // allow for comma or semicolon delimiteres by switching to commas   
+        }
+        $message = str_replace ("##CC:".$cc_address."##CC:",'A cc: of this email was sent to '.$cc_address,$message);
+   // TG edit - end
+
         $headers = array (
             'From' => $this->getFromAddress(),
             'To' => $to,
+            'Cc' => $cc_address,    
             'Subject' => $subject,
             'Date'=> date('D, d M Y H:i:s O'),
             'Message-ID' => $messageId,
@@ -429,7 +439,18 @@ class Mailer {
                 $mail = $smtp_connections[$key];
             }
 
-            $result = $mail->send($to, $headers, $body);
+     // TG edit - add CC and BCC copy
+     $result = $mail->send('educationops@psych.org', $headers, $body);
+     if ($cc_address != ''){
+                 $recipients = $to. ', '. $cc_address;
+     }
+     else {
+         $recipients = $to;        
+     }
+     // end TG edit
+     
+           // Real thing
+            $result = $mail->send($recipients, $headers, $body);
             if(!PEAR::isError($result))
                 return $messageId;
 

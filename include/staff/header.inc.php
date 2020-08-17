@@ -20,31 +20,31 @@ if (($lang = Internationalization::getCurrentLanguage())
         .tip_shadow { display:block !important; }
     </style>
     <![endif]-->
-    <script type="text/javascript" src="<?php echo ROOT_PATH; ?>js/jquery-1.8.3.min.js"></script>
-    <script type="text/javascript" src="<?php echo ROOT_PATH; ?>js/jquery-ui-1.10.3.custom.min.js"></script>
-    <script type="text/javascript" src="./js/scp.js"></script>
-    <script type="text/javascript" src="<?php echo ROOT_PATH; ?>js/jquery.pjax.js"></script>
-    <script type="text/javascript" src="<?php echo ROOT_PATH; ?>js/filedrop.field.js"></script>
-    <script type="text/javascript" src="<?php echo ROOT_PATH; ?>js/jquery.multiselect.min.js"></script>
-    <script type="text/javascript" src="./js/tips.js"></script>
-    <script type="text/javascript" src="<?php echo ROOT_PATH; ?>js/redactor.min.js"></script>
-    <script type="text/javascript" src="<?php echo ROOT_PATH; ?>js/redactor-osticket.js"></script>
-    <script type="text/javascript" src="<?php echo ROOT_PATH; ?>js/redactor-fonts.js"></script>
-    <script type="text/javascript" src="./js/bootstrap-typeahead.js"></script>
-    <link rel="stylesheet" href="<?php echo ROOT_PATH ?>css/thread.css" media="all">
-    <link rel="stylesheet" href="./css/scp.css" media="all">
-    <link rel="stylesheet" href="<?php echo ROOT_PATH; ?>css/redactor.css" media="screen">
-    <link rel="stylesheet" href="./css/typeahead.css" media="screen">
-    <link type="text/css" href="<?php echo ROOT_PATH; ?>css/ui-lightness/jquery-ui-1.10.3.custom.min.css"
+    <script type="text/javascript" src="<?php echo ROOT_PATH; ?>js/jquery-1.8.3.min.js?8b927a0"></script>
+    <script type="text/javascript" src="<?php echo ROOT_PATH; ?>js/jquery-ui-1.10.3.custom.min.js?8b927a0"></script>
+    <script type="text/javascript" src="./js/scp.js?8b927a0"></script>
+    <script type="text/javascript" src="<?php echo ROOT_PATH; ?>js/jquery.pjax.js?8b927a0"></script>
+    <script type="text/javascript" src="<?php echo ROOT_PATH; ?>js/filedrop.field.js?8b927a0"></script>
+    <script type="text/javascript" src="<?php echo ROOT_PATH; ?>js/jquery.multiselect.min.js?8b927a0"></script>
+    <script type="text/javascript" src="./js/tips.js?8b927a0"></script>
+    <script type="text/javascript" src="<?php echo ROOT_PATH; ?>js/redactor.min.js?8b927a0"></script>
+    <script type="text/javascript" src="<?php echo ROOT_PATH; ?>js/redactor-osticket.js?8b927a0"></script>
+    <script type="text/javascript" src="<?php echo ROOT_PATH; ?>js/redactor-fonts.js?8b927a0"></script>
+    <script type="text/javascript" src="./js/bootstrap-typeahead.js?8b927a0"></script>
+    <link rel="stylesheet" href="<?php echo ROOT_PATH ?>css/thread.css?8b927a0" media="all"/>
+    <link rel="stylesheet" href="./css/scp.css?8b927a0" media="all"/>
+    <link rel="stylesheet" href="<?php echo ROOT_PATH; ?>css/redactor.css?8b927a0" media="screen"/>
+    <link rel="stylesheet" href="./css/typeahead.css?8b927a0" media="screen"/>
+    <link type="text/css" href="<?php echo ROOT_PATH; ?>css/ui-lightness/jquery-ui-1.10.3.custom.min.css?8b927a0"
          rel="stylesheet" media="screen" />
-     <link type="text/css" rel="stylesheet" href="<?php echo ROOT_PATH; ?>css/font-awesome.min.css">
+     <link type="text/css" rel="stylesheet" href="<?php echo ROOT_PATH; ?>css/font-awesome.min.css?8b927a0"/>
     <!--[if IE 7]>
-    <link rel="stylesheet" href="<?php echo ROOT_PATH; ?>css/font-awesome-ie7.min.css">
+    <link rel="stylesheet" href="<?php echo ROOT_PATH; ?>css/font-awesome-ie7.min.css?8b927a0"/>
     <![endif]-->
-    <link type="text/css" rel="stylesheet" href="./css/dropdown.css">
-    <link type="text/css" rel="stylesheet" href="<?php echo ROOT_PATH; ?>css/loadingbar.css"/>
-    <link type="text/css" rel="stylesheet" href="<?php echo ROOT_PATH; ?>css/rtl.css"/>
-    <script type="text/javascript" src="./js/jquery.dropdown.js"></script>
+    <link type="text/css" rel="stylesheet" href="./css/dropdown.css?8b927a0"/>
+    <link type="text/css" rel="stylesheet" href="<?php echo ROOT_PATH; ?>css/loadingbar.css?8b927a0"/>
+    <link type="text/css" rel="stylesheet" href="<?php echo ROOT_PATH; ?>css/rtl.css?8b927a0"/>
+    <script type="text/javascript" src="./js/jquery.dropdown.js?8b927a0"></script>
 
     <?php
     if($ost && ($headers=$ost->getExtraHeaders())) {

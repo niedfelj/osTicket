@@ -69,6 +69,13 @@ class Ticket {
             /* @trans */ 'Other',
             );
 
+    // TG edit - added merge ticket function below and class.ticket-dsc1.php file and modified scp/tickets.php
+//    function mergeTicket($keepticket) {   //added for dsc mods
+//       include('class.ticket-dsc1.php');
+//    }    //added for dsc mods
+    // End TG edit
+
+
     function Ticket($id) {
         $this->id = 0;
         $this->load($id);
@@ -1182,8 +1189,17 @@ class Ticket {
             if (isset($skip[$recipient->getUserId()]))
                 continue;
             $notice = $this->replaceVars($msg, array('recipient' => $recipient));
-            $email->send($recipient, $notice['subj'], $notice['body'], $attachments,
-                $options);
+            
+            // TG - customization to supress people that don't have a psych.org email address; add if statement 
+            $pos = strpos ($recipient, 'psych.org');
+            if ($pos > 0) {
+                 $email->send($recipient, $notice['subj']." - APA staff notification update", $notice['body'], $attachments,
+                    $options);   
+            }
+//            if (strpos($recipient, 'psych.org') !== false) {
+//                 $email->send($recipient, $notice['subj']." - APA staff notification", $notice['body'], $attachments,
+//                    $options);   
+//            }
         }
 
         return;
@@ -1381,6 +1397,73 @@ class Ticket {
         //Get the message template
         if ($recipients
                 && ($msg=$tpl->getAssignedAlertMsgTemplate())) {
+
+            $msg = $this->replaceVars($msg->asArray(),
+                        array('comments' => $comments,
+                              'assignee' => $assignee,
+                              'assigner' => $assigner
+                              ));
+
+            //Send the alerts.
+            $sentlist=array();
+            $options = array(
+                'inreplyto'=>$note->getEmailMessageId(),
+                'references'=>$note->getEmailReferences(),
+                'thread'=>$note);
+            foreach( $recipients as $k=>$staff) {
+                if(!is_object($staff) || !$staff->isAvailable() || in_array($staff->getEmail(), $sentlist)) continue;
+                $alert = $this->replaceVars($msg, array('recipient' => $staff));
+                $email->sendAlert($staff, $alert['subj'], $alert['body'], null, $options);
+                $sentlist[] = $staff->getEmail();
+            }
+        }
+
+        return true;
+    }
+
+
+    function onInternalMessage($assignee, $comments, $alert=true) {
+        global $cfg, $thisstaff;
+
+//        if($this->isClosed()) $this->reopen(); //Assigned tickets must be open - otherwise why assign?
+
+//        //Assignee must be an object of type Staff or Team
+//        if(!$assignee || !is_object($assignee)) return false;
+
+//        $this->reload();
+
+        $comments = $comments ?: _S('Ticket assignment');
+        $assigner = $thisstaff ?: _S('SYSTEM (Auto Assignment)');
+
+        //Log an internal note - no alerts on the internal note.
+        $note = $this->logNote(
+            sprintf(_S('Internal Message to %s'), $assignee->getName()),
+            $comments, $assigner, false);
+
+        //See if we need to send alerts
+        if(!$alert || !$cfg->alertONAssignment()) return true; //No alerts!
+
+        $dept = $this->getDept();
+        if(!$dept
+                || !($tpl = $dept->getTemplate())
+                || !($email = $dept->getAlertEmail()))
+            return true;
+
+        //recipients
+        $recipients=array();
+        if ($assignee instanceof Staff) {
+            if ($cfg->alertStaffONAssignment())
+                $recipients[] = $assignee;
+        } elseif (($assignee instanceof Team) && $assignee->alertsEnabled()) {
+            if ($cfg->alertTeamMembersONAssignment() && ($members=$assignee->getMembers()))
+                $recipients = array_merge($recipients, $members);
+            elseif ($cfg->alertTeamLeadONAssignment() && ($lead=$assignee->getTeamLead()))
+                $recipients[] = $lead;
+        }
+
+        //Get the message template
+        if ($recipients
+                && ($msg=$tpl->getInternalNoteAlertMsgTemplate())) {
 
             $msg = $this->replaceVars($msg->asArray(),
                         array('comments' => $comments,
@@ -1688,11 +1771,18 @@ class Ticket {
         if(!is_object($staff) && !($staff=Staff::lookup($staff)))
             return false;
 
-        if (!$staff->isAvailable() || !$this->setStaffId($staff->getId()))
-            return false;
-
-        $this->onAssign($staff, $note, $alert);
-        $this->logEvent('assigned');
+        /// TG - NEED TO BE SURE the unassigned tickets can still be assigned  
+        /// TG - Modify messaging for message versus assignement
+        if  ($_POST['reassignId'] == 'Yes') {
+              if (!$staff->isAvailable() || !$this->setStaffId($staff->getId())) {
+                 return false;
+              }
+              $this->onAssign($staff, $note, $alert);
+              $this->logEvent('assigned');
+        }
+        else {
+            $this->onInternalMessage($staff, $note, $alert);            
+        }
 
         return true;
     }
@@ -1705,7 +1795,7 @@ class Ticket {
         if (!$team->isActive() || !$this->setTeamId($team->getId()))
             return false;
 
-        //Clear - staff if it's a closed ticket
+        //  Clear - staff if it's a closed ticket
         //  staff_id is overloaded -> assigned to & closed by.
         if($this->isClosed())
             $this->setStaffId(0);
@@ -2876,6 +2966,8 @@ class Ticket {
             // Auto assign staff or team - auto assignment based on filter
             // rules. Both team and staff can be assigned
             if ($vars['staffId'])
+                // TG edit - added the Yes variable here so that filtered autoassignments will still work
+                $_POST['reassignId'] = "Yes";
                  $ticket->assignToStaff($vars['staffId'], _S('Auto Assignment'));
             if ($vars['teamId'])
                 // No team alert if also assigned to an individual agent

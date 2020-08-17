@@ -165,7 +165,14 @@ class Email {
         if($attachments)
             $mailer->addAttachments($attachments);
 
-        return $mailer->send($to, $subject, $message, $options);
+// TG edit - add cc's to the to line by pulling down cc from _POST adding to message and then parse in email; have to do it in this function of cc person will get added to all the alerts as well.
+          global $_POST;
+          if ($_POST['carbon_copy'] != '') {
+            $message = $message . '##CC:'.$_POST['carbon_copy'].'##CC:';
+            $_POST['carbon_copy'] = ''; // after we extract the address the first time, wipe it out so that cc doesn't get copied on alerts
+          }
+// TG edit -- end
+          return $mailer->send($to, $subject, $message, $options);
     }
 
     function sendAutoReply($to, $subject, $message, $attachments=null, $options=array()) {

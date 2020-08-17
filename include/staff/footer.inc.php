@@ -3,6 +3,7 @@
 <?php if (!isset($_SERVER['HTTP_X_PJAX'])) { ?>
     <div id="footer">
         Copyright &copy; 2006-<?php echo date('Y'); ?>&nbsp;<?php echo (string) $ost->company ?: 'osTicket.com'; ?>&nbsp;All Rights Reserved.
+        &nbsp; | &nbsp; <a href="https://helpdesk.apaed.org/api/cron.php" target="_blank">Refresh</a> 
     </div>
 <?php
 if(is_object($thisstaff) && $thisstaff->isStaff()) { ?>

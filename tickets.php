@@ -15,6 +15,7 @@
     vim: expandtab sw=4 ts=4 sts=4:
 **********************************************************************/
 require('secure.inc.php');
+
 if(!is_object($thisclient) || !$thisclient->isValid()) die('Access denied'); //Double check again.
 
 if ($thisclient->isGuest())
@@ -78,7 +79,7 @@ if($_POST && is_object($ticket) && $ticket->getId()):
             $vars = array(
                     'userId' => $thisclient->getId(),
                     'poster' => (string) $thisclient->getName(),
-                    'message' => $_POST['message']
+                    'message' => $_POST['message'],
                     );
             $vars['cannedattachments'] = $attachments->getClean();
             if (isset($_POST['draft_id']))
@@ -106,7 +107,7 @@ if($_POST && is_object($ticket) && $ticket->getId()):
     $ticket->reload();
 endif;
 $nav->setActiveNav('tickets');
-if($ticket && $ticket->checkUserAccess($thisclient)) {
+if($ticket && $ticket->checkUserAccess($thisclient)) {    
     if (isset($_REQUEST['a']) && $_REQUEST['a'] == 'edit'
             && $cfg->allowClientUpdates()) {
         $inc = 'edit.inc.php';

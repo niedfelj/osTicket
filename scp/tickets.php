@@ -29,10 +29,11 @@ $ticket = $user = null; //clean start.
 if($_REQUEST['id']) {
     if(!($ticket=Ticket::lookup($_REQUEST['id'])))
          $errors['err']=sprintf(__('%s: Unknown or invalid ID.'), __('ticket'));
-    elseif(!$ticket->checkStaffAccess($thisstaff)) {
-        $errors['err']=__('Access denied. Contact admin if you believe this is in error');
-        $ticket=null; //Clear ticket obj.
-    }
+    //TG edit - allow x-departmental view; comment out 4 lines.
+    //elseif(!$ticket->checkStaffAccess($thisstaff)) {
+        // $errors['err']=__('Access denied. Contact admin if you believe this is in error');
+        // $ticket=null; //Clear ticket obj.
+    //}
 }
 
 //Lookup user if id is available.
@@ -64,11 +65,24 @@ if($_POST && !$errors):
         $errors=array();
         $lock=$ticket->getLock(); //Ticket lock if any
         switch(strtolower($_POST['a'])):
+     
+        // TG edit - added case mergeticket below and file tickets-dsc.php and made modification to include/class.ticket.php
+//       case 'mergeticket':  //this line added too as well as following dsc include item
+ //         include("tickets-dsc1.php");
+  //        break;  //this line added too as well as the previous dsc include item
+        // TG edit - end
+        
         case 'reply':
             if(!$thisstaff->canPostReply())
                 $errors['err'] = __('Action denied. Contact admin for access');
             else {
                 $vars = $_POST;
+                
+                // TG edit - add name of cc'ers onto the message that is posted'
+                // add it to the $vars[response] variable
+                
+                // end TG edit
+                
                 $vars['cannedattachments'] = $response_form->getField('attachments')->getClean();
                 $vars['response'] = ThreadBody::clean($vars['response']);
                 if(!$vars['response'])
@@ -104,11 +118,13 @@ if($_POST && !$errors):
 
                 // Go back to the ticket listing page on reply
                 $ticket = null;
-
+                       
             } elseif(!$errors['err']) {
                 $errors['err']=__('Unable to post the reply. Correct the errors below and try again!');
             }
+            
             break;
+            
         case 'transfer': /** Transfer ticket **/
             //Check permission
             if(!$thisstaff->canTransferTickets())
@@ -174,10 +190,12 @@ if($_POST && !$errors):
                  //Comments are not required on self-assignment (claim)
                  if($claim && !$_POST['assign_comments'])
                      $_POST['assign_comments'] = sprintf(__('Ticket claimed by %s'),$thisstaff->getName());
-                 elseif(!$_POST['assign_comments'])
-                     $errors['assign_comments'] = __('Assignment comments required');
-                 elseif(strlen($_POST['assign_comments'])<5)
-                         $errors['assign_comments'] = __('Comment too short');
+                 //elseif(!$_POST['assign_comments'])
+                 //    $errors['assign_comments'] = __('Assignment comments required');
+                 //elseif(strlen($_POST['assign_comments'])<5)
+                 //        $errors['assign_comments'] = __('Comment too short');
+                 
+                 // Tristan is here -- row 1342 OnAssign in class.ticket.php and 1691 is where DB update needs to not happen
 
                  if(!$errors && $ticket->assign($_POST['assignId'], $_POST['assign_comments'], !$claim)) {
                      if($claim) {
@@ -457,7 +475,7 @@ if($thisstaff->canCreateTickets()) {
 }
 
 
-$ost->addExtraHeader('<script type="text/javascript" src="js/ticket.js"></script>');
+$ost->addExtraHeader('<script type="text/javascript" src="js/ticket.js?8b927a0"></script>');
 $ost->addExtraHeader('<meta name="tip-namespace" content="tickets.queue" />',
     "$('#content').data('tipNamespace', 'tickets.queue');");
 

@@ -209,7 +209,8 @@ implements EmailContact {
     }
 
     function getDefaultSignatureType() {
-        return $this->ht['default_signature_type'];
+//        return $this->ht['default_signature_type'];
+        return $this->ht['mine'];
     }
 
     function getDefaultPaperSize() {
@@ -687,7 +688,8 @@ implements EmailContact {
         $token = Misc::randCode(48); // 290-bits
 
         if (!$content)
-            return new Error(/* @trans */ 'Unable to retrieve password reset email template');
+            //return new Error(/* @trans */ 'Unable to retrieve password reset email template');     // Tg edit - original
+            return new Error2(/* @trans */ 'Unable to retrieve password reset email template');     // Tg edit - update to match class.error for php upgrade
 
         $vars = array(
             'url' => $ost->getConfig()->getBaseUrl(),

@@ -166,7 +166,10 @@ class Net_SMTP
 
         $this->pipelining      = $pipelining;
         $this->socket         = new Net_Socket();
-        $this->socket_options = $socket_options;
+//Tristan patch for smtp error //TG edit
+           $this->socket_options = $socket_options;
+    // FIX broke SMTP replay - This was fix:  $this->_socket_options = array('ssl' => array('verify_peer_name' => false));
+// this was the patch; above is the original        $this->_socket_options = array('ssl' => array('verify_peer_name' => false));
         $this->timeout        = $timeout;
 
         /* Include the Auth_SASL package.  If the package is available, we 

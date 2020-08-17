@@ -36,7 +36,8 @@ class YamlDataParser {
     }
 }
 
-class YamlParserError extends Error {
+//class YamlParserError extends Error {              // tg edit - original
+class YamlParserError extends Error2 {               // tg edit - change to error2 to match class.error for php upgrade
     static $title = 'Error parsing YAML document';
 }
 ?>

@@ -1,0 +1,13 @@
+{
+    "name": "osTicket/core-plugins",
+    "repositories": [
+        {
+            "type": "pear",
+            "url": "https://pear.php.net"
+        }
+    ],
+    "require": {"ohmy\/auth":"*"},
+    "config": {
+        "vendor-dir": "lib"
+    }
+}

@@ -25,7 +25,7 @@ class osTicketSession {
     var $data = '';
     var $data_hash = '';
     var $id = '';
-    var $backend;
+    var $backend = '';
 
     function osTicketSession($ttl=0){
         $this->ttl = $ttl ?: ini_get('session.gc_maxlifetime') ?: SESSION_TTL;
@@ -38,6 +38,8 @@ class osTicketSession {
 
         // Set session cleanup time to match TTL
         ini_set('session.gc_maxlifetime', $ttl);
+        ini_set('session.save_path','/home/tris_admin/session/'); // tg edit - added to see if would help wiht php upgrade
+        ini_set('session.gc_probability', 1); // tg edit - added to see if would help with php upgrade
 
         if (OsticketConfig::getDBVersion())
             return session_start();
@@ -117,11 +119,25 @@ class osTicketSession {
             $sql.=" AND TIME_TO_SEC(TIMEDIFF(NOW(),session_updated))<$sec";
 
         $users=array();
+        $users['datatg']='';   // tg edit - added to address php upgrade
         if(($res=db_query($sql)) && db_num_rows($res)) {
-            while(list($uid)=db_fetch_row($res))
-                $users[] = $uid;
+            while(list($uid)=db_fetch_row($res)) { // tg edit - original php line -- added 7 lines below to replace
+                $users[] = $uid;          // tg edit - original php line -- added 7 lines below to replace
+            }                               // tg edit - original php line -- added 7 lines below to replace
+
+            while(list($uid)=db_fetch_row($res)) {        // tg edit - added to address php upgrade
+                if (is_null($uid)) {                      // tg edit - added to address php upgrade
+                    $users[] = '';                        // tg edit - added to address php upgrade
+                }                                         // tg edit - added to address php upgrade
+                else {                                    // tg edit - added to address php upgrade
+                    $users[] = $uid;                      // tg edit - added to address php upgrade
+                }
+            }                                          // tg edit - added to address php upgrade
         }
 
+        if (is_null($users)) {               // tg edit - added to address php upgrade
+            $users = '';                     // tg edit - added to address php upgrade
+        }                                    // tg edit - added to address php upgrade
         return $users;
     }
 

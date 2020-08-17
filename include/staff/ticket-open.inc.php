@@ -1,5 +1,5 @@
 <?php
-if(!defined('OSTSCPINC') || !$thisstaff || !$thisstaff->canCreateTickets()) die('Access Denied');
+if(!defined('OSTSCPINC') || !$thisstaff || !$thisstaff->canCreateTickets()) die('Access Denied - Cannot Open');
 $info=array();
 $info=Format::htmlchars(($errors && $_POST)?$_POST:$info);
 
@@ -307,7 +307,8 @@ if ($_POST)
                 </div>
             <?php
             }
-                $signature = '';
+//                  $signature = '';
+                    $signature = $thisstaff->getSignature();
                 if ($thisstaff->getDefaultSignatureType() == 'mine')
                     $signature = $thisstaff->getSignature(); ?>
                 <textarea class="richtext ifhtml draft draft-delete"
@@ -354,15 +355,15 @@ print $response_form->getField('attachments')->render();
                     <?php
                     $info['signature']=$info['signature']?$info['signature']:$thisstaff->getDefaultSignatureType();
                     ?>
-                    <label><input type="radio" name="signature" value="none" checked="checked"> <?php echo __('None');?></label>
                     <?php
                     if($thisstaff->getSignature()) { ?>
-                        <label><input type="radio" name="signature" value="mine"
+                        <label><input CHECKED type="radio" name="signature" value="mine"
                             <?php echo ($info['signature']=='mine')?'checked="checked"':''; ?>> <?php echo __('My signature');?></label>
                     <?php
-                    } ?>
+                    } else {?>
                     <label><input type="radio" name="signature" value="dept"
                         <?php echo ($info['signature']=='dept')?'checked="checked"':''; ?>> <?php echo sprintf(__('Department Signature (%s)'), __('if set')); ?></label>
+                    <?php } ?>
                 </td>
              </tr>
             </table>

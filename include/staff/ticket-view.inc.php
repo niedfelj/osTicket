@@ -3,7 +3,8 @@
 if(!defined('OSTSCPINC') || !$thisstaff || !is_object($ticket) || !$ticket->getId()) die('Invalid path');
 
 //Make sure the staff is allowed to access the page.
-if(!@$thisstaff->isStaff() || !$ticket->checkStaffAccess($thisstaff)) die('Access Denied');
+// TG edit - all x-depatrmental view (comment out 1 line))
+    // if(!@$thisstaff->isStaff() || !$ticket->checkStaffAccess($thisstaff)) die('Access Denied - Can not view');
 
 //Re-use the post info on error...savekeyboards.org (Why keyboard? -> some people care about objects than users!!)
 $info=($_POST && $errors)?Format::input($_POST):array();
@@ -412,6 +413,13 @@ $tcount+= $ticket->getNumNotes();
             <tr><td colspan="4" class="thread-body" id="thread-id-<?php
                 echo $entry['id']; ?>"><div><?php
                 echo $entry['body']->toHtml(); ?></div></td></tr>
+                
+            <?php
+            // TG edit - added merge feature
+//            include "ticket-view.inc-dsc2.php"
+            // end TG edit
+            ?>
+
             <?php
             if($entry['attachments']
                     && ($tentry = $ticket->getThreadEntry($entry['id']))
@@ -454,6 +462,9 @@ $tcount+= $ticket->getNumNotes();
         if($thisstaff->canPostReply()) { ?>
         <li><a id="reply_tab" href="#reply"><?php echo __('Post Reply');?></a></li>
         <?php
+        //TG edit - merge tickets
+//        include "ticket-view.inc-dsc4.php";
+        //end TG edit       
         } ?>
         <li><a id="note_tab" href="#note"><?php echo __('Post Internal Note');?></a></li>
         <?php
@@ -463,7 +474,7 @@ $tcount+= $ticket->getNumNotes();
         }
 
         if($thisstaff->canAssignTickets()) { ?>
-        <li><a id="assign_tab" href="#assign"><?php echo $ticket->isAssigned()?__('Reassign Ticket'):__('Assign Ticket'); ?></a></li>
+        <li><a id="assign_tab" href="#assign"><?php echo $ticket->isAssigned()?__('Send Internal Message'):__('Send Internal Message'); ?></a></li>
         <?php
         } ?>
     </ul>
@@ -480,6 +491,7 @@ $tcount+= $ticket->getNumNotes();
             <tr>
                 <td width="120">
                     <label><strong><?php echo __('To'); ?>:</strong></label>
+                    <br /><br />
                 </td>
                 <td>
                     <?php
@@ -501,10 +513,11 @@ $tcount+= $ticket->getNumNotes();
             if(1) { //Make CC optional feature? NO, for now.
                 ?>
             <tbody id="cc_sec"
-                style="display:<?php echo $emailReply?  'table-row-group':'none'; ?>;">
+                style="display:<?php echo $emailReply?  'table-row-group':'none'; ?>;">             
              <tr>
                 <td width="120">
-                    <label><strong><?php echo __('Collaborators'); ?>:</strong></label>
+                    <label><strong><?php echo __('APA Staff Collaborators'); ?>:</strong></label>
+                    <br /><br />
                 </td>
                 <td>
                     <input type='checkbox' value='1' name="emailcollab" id="emailcollab"
@@ -525,6 +538,17 @@ $tcount+= $ticket->getNumNotes();
                    ?>
                 </td>
              </tr>
+             <!-- // TG addition --!>
+             <tr>
+                <td width="120">
+                    <label><strong><?php echo __('Add CC\'s for Outside email:'); ?></strong></label>
+                    <br /><br />
+                </td>                    
+                <td>
+                   <input type="text" name="carbon_copy" />
+                </td>
+             </tr>
+             <!-- // end TG addition --!>
             </tbody>
             <?php
             } ?>
@@ -555,7 +579,8 @@ $tcount+= $ticket->getNumNotes();
                     </select>
                     <br>
 <?php } # endif (canned-resonse-enabled)
-                    $signature = '';
+//                    $signature = '';
+                    $signature = $thisstaff->getSignature();
                     switch ($thisstaff->getDefaultSignatureType()) {
                     case 'dept':
                         if ($dept && $dept->canAppendSignature())
@@ -583,6 +608,12 @@ $tcount+= $ticket->getNumNotes();
 print $response_form->getField('attachments')->render();
 ?>
                 </div>
+<?php
+//TG edit merge tickets
+//include "ticket-view.inc-dsc1.php"
+// end TG edit
+?>
+
                 </td>
             </tr>
             <tr>
@@ -591,22 +622,22 @@ print $response_form->getField('attachments')->render();
                 </td>
                 <td>
                     <?php
+//                    $info['signature']=$info['signature']?$info['signature']:$thisstaff->getDefaultSignatureType();
                     $info['signature']=$info['signature']?$info['signature']:$thisstaff->getDefaultSignatureType();
                     ?>
-                    <label><input type="radio" name="signature" value="none" checked="checked"> <?php echo __('None');?></label>
                     <?php
                     if($thisstaff->getSignature()) {?>
-                    <label><input type="radio" name="signature" value="mine"
+                    <label><input CHECKED type="radio" name="signature" value="mine"
                         <?php echo ($info['signature']=='mine')?'checked="checked"':''; ?>> <?php echo __('My Signature');?></label>
                     <?php
                     } ?>
                     <?php
-                    if($dept && $dept->canAppendSignature()) { ?>
-                    <label><input type="radio" name="signature" value="dept"
-                        <?php echo ($info['signature']=='dept')?'checked="checked"':''; ?>>
-                        <?php echo sprintf(__('Department Signature (%s)'), Format::htmlchars($dept->getName())); ?></label>
+//                    if($dept && $dept->canAppendSignature()) { ?>
+                        <?php // echo "<label><input type=\"radio\" name=\"signature\" value=\"dept\" "; ?>
+                        <?php //echo ($info['signature']=='dept')?'checked="checked"':''; ?>
+                        <?php //echo sprintf(__('Department Signature (%s)'), Format::htmlchars($dept->getName())); ?></label>
                     <?php
-                    } ?>
+//                    } ?>
                 </td>
             </tr>
             <tr>
@@ -724,6 +755,13 @@ print $note_form->getField('attachments')->render();
            <input class="btn_sm" type="reset" value="<?php echo __('Reset');?>">
        </p>
    </form>
+   
+<?php
+// TG edit - merge tickets
+//include "ticket-view.inc-dsc3.php"
+// end TG edit
+?>
+
     <?php
     if($thisstaff->canTransferTickets()) { ?>
     <form id="transfer" action="tickets.php?id=<?php echo $ticket->getId(); ?>#transfer" name="transfer" method="post" enctype="multipart/form-data">
@@ -784,7 +822,7 @@ print $note_form->getField('attachments')->render();
     <?php
     } ?>
     <?php
-    if($thisstaff->canAssignTickets()) { ?>
+    ?>
     <form id="assign" action="tickets.php?id=<?php echo $ticket->getId(); ?>#assign" name="assign" method="post" enctype="multipart/form-data">
         <?php csrf_token(); ?>
         <input type="hidden" name="id" value="<?php echo $ticket->getId(); ?>">
@@ -802,17 +840,17 @@ print $note_form->getField('attachments')->render();
             } ?>
             <tr>
                 <td width="120" style="vertical-align:top">
-                    <label for="assignId"><strong><?php echo __('Assignee');?>:</strong></label>
+                    <label for="assignId"><strong><?php echo __('Send To');?>:</strong></label>
                 </td>
                 <td>
                     <select id="assignId" name="assignId">
                         <option value="0" selected="selected">&mdash; <?php echo __('Select an Agent OR a Team');?> &mdash;</option>
                         <?php
-                        if ($ticket->isOpen()
+/*                        if ($ticket->isOpen()
                                 && !$ticket->isAssigned()
                                 && $ticket->getDept()->isMember($thisstaff))
                             echo sprintf('<option value="%d">'.__('Claim Ticket (comments optional)').'</option>', $thisstaff->getId());
-
+*/
                         $sid=$tid=0;
 
                         if ($dept->assignMembersOnly())
@@ -861,6 +899,19 @@ print $note_form->getField('attachments')->render();
                     <?php } ?>
                 </td>
             </tr>
+            <?php     if($thisstaff->canTransferTickets()) {  // TG this is an internal modification to send messages without reassigning?>
+            <tr>
+                <td width="120" style="vertical-align:top">
+                    <label for="assignId"><strong><?php echo __('Reassign');?>:</strong></label>
+                </td>
+                <td>
+                    <select id="reassignId" name="reassignId">
+                            <option value="Yes">Yes</option>
+                            <option value="No">No</option>
+                    </select>                    
+                </td>
+            </tr>
+            <?php } ?>
             <tr>
                 <td width="120" style="vertical-align:top">
                     <label><strong><?php echo __('Comments');?>:</strong><span class='error'>&nbsp;</span></label>
@@ -875,12 +926,12 @@ print $note_form->getField('attachments')->render();
             </tr>
         </table>
         <p  style="padding-left:165px;">
-            <input class="btn_sm" type="submit" value="<?php echo $ticket->isAssigned()?__('Reassign'):__('Assign'); ?>">
+            <input class="btn_sm" type="submit" value="<?php echo $ticket->isAssigned()?__('Send'):__('Send'); ?>">
             <input class="btn_sm" type="reset" value="<?php echo __('Reset');?>">
         </p>
     </form>
     <?php
-    } ?>
+     ?>
 </div>
 <div style="display:none;" class="dialog" id="print-options">
     <h3><?php echo __('Ticket Print Options');?></h3>

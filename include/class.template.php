@@ -45,8 +45,10 @@ class EmailTemplateGroup {
             'desc'=>/* @trans */ 'Notice sent to user, if enabled, on new ticket created by an agent on their behalf (e.g phone calls).'),
         'ticket.overlimit'=>array(
             'group'=>'ticket.user',
-            'name'=>/* @trans */ 'Over Limit Notice',
-            'desc'=>/* @trans */ 'A one-time notice sent, if enabled, when user has reached the maximum allowed open tickets.'),
+            'name'=>/* @trans */ 'Internal Message Template (previously Over Limit Notice)',
+            // TG - renamed template description 
+//            'desc'=>/* @trans */ 'A one-time notice sent, if enabled, when user has reached the maximum allowed open tickets.'),
+            'desc'=>/* @trans */ 'Repurposed template for internal messaging.'),
         'ticket.reply'=>array(
             'group'=>'ticket.user',
             'name'=>/* @trans */ 'Response/Reply Template',
@@ -242,6 +244,11 @@ class EmailTemplateGroup {
 
     function getAssignedAlertMsgTemplate() {
         return $this->getMsgTemplate('assigned.alert');
+    }
+
+    // TG edit -- add new template for internal note; using the overlimit template to for this
+    function getInternalNoteAlertMsgTemplate() {
+        return $this->getMsgTemplate('ticket.overlimit');
     }
 
     function getOverdueAlertMsgTemplate() {

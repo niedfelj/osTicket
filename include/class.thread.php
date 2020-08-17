@@ -715,12 +715,15 @@ class ThreadEntry {
                 true);
             return true;
         }
+        
+        //TG edit -- addded TGposterEmail below as part of ceforms and program sorting funciton in line 1130
 
         $vars = array(
             'mid' =>    $mailinfo['mid'],
             'header' => $mailinfo['header'],
             'ticketId' => $ticket->getId(),
             'poster' => $mailinfo['name'],
+            'TGposterEmail' => $mailinfo['email'],
             'origin' => 'Email',
             'source' => 'Email',
             'ip' =>     '',
@@ -897,6 +900,7 @@ class ThreadEntry {
     function lookupByEmailHeaders(&$mailinfo, &$seen=false) {
         // Search for messages using the References header, then the
         // in-reply-to header
+        
         $search = 'SELECT thread_id, email_mid FROM '.TICKET_EMAIL_INFO_TABLE
                . ' WHERE email_mid=%s ORDER BY thread_id DESC';
 
@@ -1109,10 +1113,22 @@ class ThreadEntry {
         if ($poster && is_object($poster))
             $poster = (string) $poster;
 
+
+        //////////////////////////////////////////////
+        //////////////////////////////////////////////
+        //////////////////////////////////////////////
+        // TG edit -- calls class.tgedit_thread.php
+        ////////////////////////////////////////////
+        require_once(INCLUDE_DIR.'class.tgedit_thread.php'); 
+        ////////////////////////////////////////////
+        //////////////////////////////////////////////
+        //////////////////////////////////////////////
+
+
         $sql=' INSERT INTO '.TICKET_THREAD_TABLE.' SET created=NOW() '
             .' ,thread_type='.db_input($vars['type'])
             .' ,ticket_id='.db_input($vars['ticketId'])
-            .' ,title='.db_input(Format::sanitize($vars['title'], true))
+            .' ,title='.db_input(Format::sanitize($vars['title'].$cc_string, true)) // cc_string comes from class.tgedit_thread.php
             .' ,format='.db_input($vars['body']->getType())
             .' ,staff_id='.db_input($vars['staffId'])
             .' ,user_id='.db_input($vars['userId'])

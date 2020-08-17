@@ -16,9 +16,9 @@ class Bootstrap {
         ini_set('allow_url_include', 0);
 
         #Disable session ids on url.
-        ini_set('session.use_trans_sid', 0);
+//        ini_set('session.use_trans_sid', 0);      // tg edit - php upgrade
         #No cache
-        session_cache_limiter('nocache');
+//        session_cache_limiter('nocache');         // tg edit - php upgrade
 
         #Error reporting...Good idea to ENABLE error reporting to a file. i.e display_errors should be set to false
         $error_reporting = E_ALL & ~E_NOTICE;
@@ -29,8 +29,8 @@ class Bootstrap {
         error_reporting($error_reporting); //Respect whatever is set in php.ini (sysadmin knows better??)
 
         #Don't display errors
-        ini_set('display_errors', 1);
-        ini_set('display_startup_errors', 1);
+        ini_set('display_errors', '0'); // Set by installer
+        ini_set('display_startup_errors', '0'); // Set by installer
 
         //Default timezone
         if (!ini_get('date.timezone')) {
@@ -292,7 +292,7 @@ $here = ($h = realpath($here)) ? $h : $here;
 define('ROOT_DIR',str_replace('\\', '/', $here.'/'));
 unset($here); unset($h);
 
-define('INCLUDE_DIR',ROOT_DIR.'include/'); //Change this if include is moved outside the web path.
+define('INCLUDE_DIR', ROOT_DIR . 'include/'); // Set by installer
 define('PEAR_DIR',INCLUDE_DIR.'pear/');
 define('SETUP_DIR',ROOT_DIR.'setup/');
 
@@ -302,8 +302,8 @@ define('I18N_DIR', INCLUDE_DIR.'i18n/');
 /*############## Do NOT monkey with anything else beyond this point UNLESS you really know what you are doing ##############*/
 
 #Current version && schema signature (Changes from version to version)
-define('THIS_VERSION','1.8-git'); //Shown on admin panel
-define('GIT_VERSION','$git');
+define('THIS_VERSION', 'v1.9.14'); // Set by installer
+define('GIT_VERSION', '8b927a0'); // Set by installer
 define('MAJOR_VERSION', '1.9');
 //Path separator
 if(!defined('PATH_SEPARATOR')){

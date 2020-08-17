@@ -17,7 +17,8 @@
     vim: expandtab sw=4 ts=4 sts=4:
 **********************************************************************/
 
-class Error extends Exception {
+// class Error extends Exception {        // tg edit - original line
+class Error2 extends Exception {          // tg edit - changed Error to Error2 since Error is reserved in php7
     static $title = '';
     static $sendAlert = true;
 

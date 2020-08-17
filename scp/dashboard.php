@@ -20,15 +20,15 @@ $ost->addExtraHeader('<meta name="tip-namespace" content="dashboard.dashboard" /
 require(STAFFINC_DIR.'header.inc.php');
 ?>
 
-<script type="text/javascript" src="js/raphael-min.js"></script>
-<script type="text/javascript" src="js/g.raphael.js"></script>
-<script type="text/javascript" src="js/g.line-min.js"></script>
-<script type="text/javascript" src="js/g.dot-min.js"></script>
-<script type="text/javascript" src="js/bootstrap-tab.js"></script>
-<script type="text/javascript" src="js/dashboard.inc.js"></script>
+<script type="text/javascript" src="js/raphael-min.js?8b927a0"></script>
+<script type="text/javascript" src="js/g.raphael.js?8b927a0"></script>
+<script type="text/javascript" src="js/g.line-min.js?8b927a0"></script>
+<script type="text/javascript" src="js/g.dot-min.js?8b927a0"></script>
+<script type="text/javascript" src="js/bootstrap-tab.js?8b927a0"></script>
+<script type="text/javascript" src="js/dashboard.inc.js?8b927a0"></script>
 
-<link rel="stylesheet" type="text/css" href="css/bootstrap.css"/>
-<link rel="stylesheet" type="text/css" href="css/dashboard.css"/>
+<link rel="stylesheet" type="text/css" href="css/bootstrap.css?8b927a0"/>
+<link rel="stylesheet" type="text/css" href="css/dashboard.css?8b927a0"/>
 
 <h2><?php echo __('Ticket Activity');
 ?>&nbsp;<i class="help-tip icon-question-sign" href="#ticket_activity"></i></h2>

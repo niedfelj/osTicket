@@ -1,4 +1,4 @@
-<h3><?php echo __('Ticket Collaborators'); ?></h3>
+<h3><?php echo __('APA Staff Collaborators<br>(emails will only be sent to psych.org addresses)'); ?></h3>
 <b><a class="close" href="#"><i class="icon-remove-circle"></i></a></b>
 <?php
 if($info && $info['msg']) {
@@ -11,6 +11,7 @@ if(($users=$ticket->getCollaborators())) {?>
 <form method="post" class="collaborators" action="#tickets/<?php echo $ticket->getId(); ?>/collaborators">
     <table border="0" cellspacing="1" cellpadding="1" width="100%">
     <?php
+    $cc_string = ''; // TG edit - start by making a user friendly cc string
     foreach($users as $user) {
         $checked = $user->isActive() ? 'checked="checked"' : '';
         echo sprintf('<tr>
@@ -31,8 +32,18 @@ if(($users=$ticket->getCollaborators())) {?>
                     $user->getEmail(),
                     $user->getId(),
                     $user->getId());
+// TG edit - concat a string of email addresses that are not equal to the primary
+           $cc_string .= $user->getEmail().', ';   
+// TG end
     }
+
+// TG edit - if there is a cc string, show it
+        if ($cc_string != '') {
+            echo "<tr><td colspam=3><br>CC email string: ". rtrim($cc_string, ", ") ."</td></tr>";        
+        }
+// TG end
     ?>
+    
     </table>
     <hr style="margin-top:1em"/>
     <div><a class="collaborator"
